@@ -3,11 +3,27 @@ import { useState } from "react";
 // import Youtube from "react-youtube";
 import { tutorialsMap } from "./fakeData";
 import "./resources.css";
+//import Iframe from 'react-iframe';
 
 // tags is currently unused
 function ToggleItem({ id, title, description, url, tags }) {
 	const [showButton, setShowButton] = useState(false);
+    
+	let ytURL;
+	const startIndex = url.indexOf("=");
+	let endIndex = startIndex + 1;
+	let done = false
+	while(!done && endIndex < url.length)
+	{
+        if(url[endIndex] === "&" || url[endIndex] === "?")
+		{
+            endIndex--;
+			done = true; 
+		}
+		endIndex++;
+	}
 
+	ytURL = "https://www.youtube-nocookie.com/embed/" + url.substring(startIndex + 1, endIndex) + "?origin=http://127.0.0.1:5173/";
 	return (
 		<li className="resource-list-item" key={id}>
 			<button
@@ -20,14 +36,15 @@ function ToggleItem({ id, title, description, url, tags }) {
 
 			<div className={`resource-list-description ${showButton && "active"}`}>
 				<p>{description}</p>
-				<a
+				{/*<a
 					className="resource-link"
 					href={url}
 					target="_blank"
 					rel="noopener noreferrer"
-				>
-					Watch the video here. {/* Will open link in new tab*/}
-				</a>
+	>
+					Watch the video here.*/} {/* Will open link in new tab*/}
+				{/*</a>*/}
+	            <iframe width="50%" height="90%" src={ytURL} title="YouTube video player" frameBorder="0" allowFullScreen></iframe>
 				<p>Tags: {tags.join(", ")}</p>
 			</div>
 		</li>
